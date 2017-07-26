@@ -118,7 +118,7 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
     };
 
     this.removeStream = function(streamToRemove) {
-        if (!mediaRecorder || !self.audioSourceHash[stream.id]) {
+        if (!mediaRecorder || !self.audioSourceHash[streamToRemove.id]) {
             return;
         }
         //Remove from arrayOfMediaStreams
