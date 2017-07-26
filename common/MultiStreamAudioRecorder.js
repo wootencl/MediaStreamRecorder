@@ -47,29 +47,22 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
     };
 
     function getMixedAudioStream() {
+        if (arrayOfMediaStreams.length == 0) {
+            return;
+        }
         // via: @pehrsons
         self.audioContext = new AudioContext();
         var audioSources = [];
+        self.audioDestination = self.audioContext.createMediaStreamDestination();
 
-        var audioTracksLength = 0;
         arrayOfMediaStreams.forEach(function(stream) {
             if (!stream.getAudioTracks().length) {
                 return;
             }
-
-            audioTracksLength++;
-
-            audioSources.push(self.audioContext.createMediaStreamSource(stream));
-        });
-
-        if (!audioTracksLength) {
-            return;
-        }
-
-        self.audioDestination = self.audioContext.createMediaStreamDestination();
-        audioSources.forEach(function(audioSource) {
+            var audioSource = self.audioContext.createMediaStreamSource(stream)
             audioSource.connect(self.audioDestination);
         });
+
         return self.audioDestination.stream;
     }
 
