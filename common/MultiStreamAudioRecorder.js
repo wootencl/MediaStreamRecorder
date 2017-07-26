@@ -117,12 +117,16 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         }
     };
 
-    this.removeStream = function(stream) {
+    this.removeStream = function(streamToRemove) {
         if (!mediaRecorder || !self.audioSourceHash[stream.id]) {
             return;
         }
+        //Remove from arrayOfMediaStreams
+        arrayOfMediaStreams = arrayOfMediaStreams.filter(function(stream) {
+            return stream.id != streamToRemove.id;
+        });
 
-        self.audioSourceHash[stream.id].diconnect();
+        self.audioSourceHash[streamToRemove.id].diconnect(self.audioDestination);
     };
 
     this.ondataavailable = function(blob) {
