@@ -1,4 +1,4 @@
-// Last time updated: 2017-07-26 3:41:12 AM UTC
+// Last time updated: 2017-07-26 4:00:05 AM UTC
 
 // links:
 // Open-Sourced: https://github.com/streamproc/MediaStreamRecorder
@@ -460,9 +460,6 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         };
 
         mediaRecorder.onstop = self.onstop;
-
-        drawVideosToCanvas();
-
         mediaRecorder.start(timeSlice);
     };
 
