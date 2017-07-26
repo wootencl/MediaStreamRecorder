@@ -29,9 +29,6 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         };
 
         mediaRecorder.onstop = self.onstop;
-
-        drawVideosToCanvas();
-
         mediaRecorder.start(timeSlice);
     };
 
