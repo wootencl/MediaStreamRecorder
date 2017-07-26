@@ -11,6 +11,8 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         this.mimeType = 'audio/wav';
     }
 
+    self.audioSourceHash = {};
+
     this.start = function(timeSlice) {
         isStoppedRecording = false;
 
@@ -109,8 +111,18 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
 
         if (stream.getAudioTracks().length && self.audioContext) {
             var audioSource = self.audioContext.createMediaStreamSource(stream);
+            // Store stream for potential deletion later
+            self.audioSourceHash[stream.id] = audioSource;
             audioSource.connect(self.audioDestination);
         }
+    };
+
+    this.removeStream = function(stream) {
+        if (!mediaRecorder || !self.audioSourceHash[stream.id]) {
+            return;
+        }
+
+        self.audioSourceHash[stream.id].diconnect();
     };
 
     this.ondataavailable = function(blob) {
