@@ -52,16 +52,15 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         }
         // via: @pehrsons
         self.audioContext = new AudioContext();
-        var audioSources = [];
         self.audioDestination = self.audioContext.createMediaStreamDestination();
 
         arrayOfMediaStreams.forEach(function(stream) {
             if (!stream.getAudioTracks().length) {
                 return;
             }
+            var audioSource = self.audioContext.createMediaStreamSource(stream);
             // Store stream for potential deletion later
             self.audioSourceHash[stream.id] = audioSource;
-            var audioSource = self.audioContext.createMediaStreamSource(stream);
             audioSource.connect(self.audioDestination);
         });
 
@@ -121,7 +120,7 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
             return stream.id != streamToRemove.id;
         });
 
-        self.audioSourceHash[streamToRemove.id].diconnect(self.audioDestination);
+        self.audioSourceHash[streamToRemove.id].disconnect(self.audioDestination);
     };
 
     this.ondataavailable = function(blob) {
