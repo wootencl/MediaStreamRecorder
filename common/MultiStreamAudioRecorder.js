@@ -59,7 +59,9 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
             if (!stream.getAudioTracks().length) {
                 return;
             }
-            var audioSource = self.audioContext.createMediaStreamSource(stream)
+            // Store stream for potential deletion later
+            self.audioSourceHash[stream.id] = audioSource;
+            var audioSource = self.audioContext.createMediaStreamSource(stream);
             audioSource.connect(self.audioDestination);
         });
 

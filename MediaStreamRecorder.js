@@ -1,4 +1,4 @@
-// Last time updated: 2017-07-26 5:23:23 AM UTC
+// Last time updated: 2017-07-30 7:40:41 PM UTC
 
 // links:
 // Open-Sourced: https://github.com/streamproc/MediaStreamRecorder
@@ -490,7 +490,9 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
             if (!stream.getAudioTracks().length) {
                 return;
             }
-            var audioSource = self.audioContext.createMediaStreamSource(stream)
+            // Store stream for potential deletion later
+            self.audioSourceHash[stream.id] = audioSource;
+            var audioSource = self.audioContext.createMediaStreamSource(stream);
             audioSource.connect(self.audioDestination);
         });
 
