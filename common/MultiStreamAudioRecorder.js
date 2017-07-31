@@ -121,6 +121,9 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         });
 
         self.audioSourceHash[streamToRemove.id].disconnect(self.audioDestination);
+
+        //Delete from `audioSourceHash`
+        delete self.audioSourceHash[streamToRemove.id];
     };
 
     this.ondataavailable = function(blob) {

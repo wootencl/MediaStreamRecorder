@@ -1,4 +1,4 @@
-// Last time updated: 2017-07-30 8:13:56 PM UTC
+// Last time updated: 2017-07-31 10:30:31 PM UTC
 
 // links:
 // Open-Sourced: https://github.com/streamproc/MediaStreamRecorder
@@ -552,6 +552,9 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         });
 
         self.audioSourceHash[streamToRemove.id].disconnect(self.audioDestination);
+
+        //Delete from `audioSourceHash`
+        delete self.audioSourceHash[streamToRemove.id];
     };
 
     this.ondataavailable = function(blob) {
