@@ -1,4 +1,4 @@
-// Last time updated: 2017-07-31 10:30:31 PM UTC
+// Last time updated: 2017-11-21 4:01:48 AM UTC
 
 // links:
 // Open-Sourced: https://github.com/streamproc/MediaStreamRecorder
@@ -443,6 +443,7 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
     }
 
     self.audioSourceHash = {};
+    self.muted = false; // Indicates whether the stream should be muted or not
 
     this.start = function(timeSlice) {
         isStoppedRecording = false;
@@ -475,6 +476,8 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         mediaRecorder.stop(function(blob) {
             callback(blob);
         });
+
+        self.audioContext.close();
     };
 
     function getMixedAudioStream() {
@@ -535,6 +538,11 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         }
 
         if (stream.getAudioTracks().length && self.audioContext) {
+            // Special Case: Check if muted prior. If so, mute stream
+            if (self.muted) {
+                stream.getAudioTracks()[0].enabled = false;
+            }
+
             var audioSource = self.audioContext.createMediaStreamSource(stream);
             // Store stream for potential deletion later
             self.audioSourceHash[stream.id] = audioSource;
@@ -563,6 +571,28 @@ function MultiStreamAudioRecorder(arrayOfMediaStreams) {
         }
         console.log('ondataavailable', blob);
     };
+
+    this.mute = function() {
+        self.muted = true;
+        if (arrayOfMediaStreams.length) {
+            arrayOfMediaStreams.forEach(function(stream) {
+                if (stream.getAudioTracks().length) {
+                    stream.getAudioTracks()[0].enabled = false;
+                }
+            });
+        }
+    }
+
+    this.unmute = function() {
+        self.muted = false;
+        if (arrayOfMediaStreams.length) {
+            arrayOfMediaStreams.forEach(function(stream) {
+                if (stream.getAudioTracks().length) {
+                    stream.getAudioTracks()[0].enabled = true;
+                }
+            });
+        }
+    }
 
     this.onstop = function() {};
 }
